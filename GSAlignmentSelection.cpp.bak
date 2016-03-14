@@ -1,0 +1,44 @@
+#include "GSAlignmentSelection.h"
+
+
+
+GSAS :: GSAlignmentSelection()
+{
+    //nothing to do right now
+}
+
+GSAS :: ~GSAlignmentSelection()
+{
+    //nothing to do right now
+}
+
+/*
+ *
+ */
+void GSAS :: makeSelection(vector<Alignment>& AlVct)
+{
+    
+}
+
+void GSAS :: GSAS_all()
+{
+}
+
+
+void GSAS :: computeScores()
+{
+}
+
+double GSAS :: getScore()
+{
+    return 1;
+}
+
+void createScoringDM()
+{
+}
+
+
+
+
+

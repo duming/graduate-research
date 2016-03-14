@@ -1,23 +1,22 @@
-#include "DataObject/DataObject.h"
+#include "DataObject/DataObjects.h"
 
 #include <stdio.h>
-#include "Point.h"
 #include "Eigen/Dense"
 #include<iostream>
+#include "myUtility.hpp"
 
 //define the 3d coordinate data structure
-typedef Eigen::Matrix<double,Dynamic,3> COORDS;
+typedef Eigen::Matrix<double,Eigen::Dynamic,3> COORDS;
 
-class AlignResult
+class AlignVector
 {
     public: 
-        AlignResult(std::vector<Alignment>&AlVct)
+        AlignVector()
         {
-            this->AlVct = AlVct;
-            vctlen = AlVct.size();
         }
-        ~AlignResult();
-       
+        ~AlignVector()
+        {
+        }
         /*
          * input:   path that the json and .coords file are stored
          * output:  return ture if read succeed otherwise return false
@@ -43,7 +42,7 @@ class AlignResult
         bool readCoord(const char* filename);
 
     private:
-        std::vector<Alignment> &AlVct;
+        std::vector<Alignment> AlVct;
         int vctlen;
         
 };

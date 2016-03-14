@@ -36,7 +36,6 @@ void test()
     cout<<tmp.get("double",-1).asDouble()<<endl;
 }
 
-/*
 //Read json file into Alignment vector 
 bool ReadAligns(const char* filename, vector<Alignment>& AlVct)
 {   
@@ -101,11 +100,11 @@ bool ReadAligns(const char* filename, vector<Alignment>& AlVct)
 		{
 		    AlVct[idx].isInDB = false;
 		}
-		AlVct[idx].setScore(atof(tmp.get("score", "").asString().c_str()));
-		AlVct[idx].setExpectedValue(atof(tmp.get("expect", "").asString().c_str()));
+		//AlVct[idx].setScore(atof(tmp.get("score", "").asString().c_str()));
+		//AlVct[idx].setExpectedValue(atof(tmp.get("expect", "").asString().c_str()));
 		std::string identitiesString = tmp.get("identities", "").asString();
 		identitiesString = identitiesString.substr(0, identitiesString.size() - 1);
-		AlVct[idx].setIdentities(atof(identitiesString.c_str()));
+		//AlVct[idx].setIdentities(atof(identitiesString.c_str()));
 		AlVct[idx].setQueryStart(atoi(tmp.get("queryStart", "").asString().c_str()));
 		AlVct[idx].setQueryPart(tmp.get("queryPart", "").asString());
 		AlVct[idx].setQueryEnd(atoi(tmp.get("queryEnd", "").asString().c_str()));
@@ -124,7 +123,6 @@ bool ReadAligns(const char* filename, vector<Alignment>& AlVct)
     return true;
 }
 
-*/
 
 bool ReadCoord(const char* filename, Point*& p)
 {

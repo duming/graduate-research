@@ -22,7 +22,7 @@ void test();
  * Read blast alignment results file into a vector of alignment class
  * my version using Json library
  */
-bool ReadAligns(const char* filename, vector<Alignment>& AlVct);
+std::vector<std::string> ReadAligns(const char* filename, vector<Alignment>& AlVct);
 
 
 
@@ -32,3 +32,14 @@ bool ReadAligns(const char* filename, vector<Alignment>& AlVct);
  * based on the size of the file
  */
 bool ReadCoord(const char* filename, Point*& p);
+
+
+
+/*
+ * Counts the gap numbers of a string 
+ * Gaps are represented bt '-'
+ * Input: string str;
+ * Output: int gap number
+ */
+int countGap(std::string str);
+

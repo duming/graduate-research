@@ -1,5 +1,5 @@
-#include "GSAlignmentSelection.h"
-#include "myUtility.h"
+#include "GSAlignmentSelection.hpp"
+#include "myUtility.hpp"
 #include "DataObject/Point.h"
 #include "stdlib.h"
 #include "DataObject/Alignment.h"
@@ -16,22 +16,106 @@ using namespace std;
 int main()
 {
 
-    vector<Alignment> AlVct;
-    string dataPath ="/Users/ming/projects/MUfold/Data/GenerateExperimentDatasetOutput/casp11_fully/"; 
-    string dataName ="T0759";
-    string suffix = "_blast.json";
+    string dataPath ="/Users/ming/projects/MUfold/Data/newData/";
+    //GenerateExperimentDatasetOutput/casp11_04302014_fully/"; 
+    string fileName = "T0759_blast.json";
+    AlignVector alv;
 
-    string n2 ="test.json";    
-    string coordName="T0759/blast_T0759_0_1LM7_A.coords";
+    alv.readAll(dataPath, fileName);
+    //alv.info_3D[0].makeSegment(alv.AlVct[0]);
+    //test make segment
+    for(int i=0;i<alv.vctlen;i++)
+    {
+        //cout<<alv.info_3D[i].sgmts.size()<<endl;
+        //cout<<alv.AlVct[i].getQueryPart()<<endl;
+        //cout<<alv.AlVct[i].getSubjectPart()<<endl;
+        //cout<<alv.info_3D[i].allCrds<<endl;
+        int totalLen = alv.info_3D[i].allCrds.rows();
+        int sum = 0;
+        for(int j=0;j<alv.info_3D[i].sgmts.size();j++)
+        {   
+            my3Dinfo::segment& sg = alv.info_3D[i].sgmts[j];
+
+            //check total length of all segments
+            sum += sg.crds.rows();
+
+            int sgl1, sgl2;
+            sgl1 = sg.ted - sg.tst+1;
+            sgl2 = sg.qed -sg.qst+1;
+            if(sgl1 != sg.crds.rows() || sgl2 != sgl1)
+                cout<<j<<":segment length error"<<sgl1<<"/"<<sgl2<<"/"<<sg.crds.rows()<<endl;
+
+            //cout<<sg.qst<<"/"<<sg.qed<<"/"<<sg.tst<<"/"<<sg.ted<<endl;
+            //cout<<&sg.crds<<endl;
+            //cout<<sg.crds.rows()<<endl;
+            //cout<<sg.crds<<endl;
+            //cout<<endl;
+        }
+        int gapNum = countGap(alv.AlVct[i].getSubjectPart());
+        if(!(sum + gapNum == totalLen))
+            cout<<"total length not equal"<<sum<<"/"<<totalLen<<endl;
+
+        cout<<"++++++++++++++++"<<i<<"++++++++++++++++++"<<endl;
+    }
+    cout<<alv.vctlen<<endl;
+
+
+    /*
+    //test gapLength()
+    string testStr = "IVDPVSNLRLPVEEAYKRGLVGIEFKEKLLSAE------------RAVTGYNDPETGNIISLFQAMNKELIEKGH";
+    for(int i=0; i<testStr.length(); i++)
+    {
+        cout<<gapLength(testStr,i)<<" "<<testStr[i]<<endl;
+    }
+    cout<<endl<<testStr<<endl;
+    */
+
+    /*
+    //test file format 
+    for(int i;i<alv.vctlen;i++)
+    {
+        string qstr = alv.AlVct[i].getQueryPart();
+        string sstr = alv.AlVct[i].getSubjectPart();
+
+       // cout<<qstr<<endl;
+       // cout<<sstr<<endl;
+
+        int tgl = alv.AlVct[i].getTargetLength();
+        int tpl = alv.AlVct[i].getTemplateSequenceLength();
+        
+        int tgst = alv.AlVct[i].getQueryStart();
+        int tpst = alv.AlVct[i].getSubjectStart();
+
+        //int shift = alv.info_3D[i].shift;
+        int mtl = alv.info_3D[i].allCrds.rows();
+
+        int tge = alv.AlVct[i].getQueryEnd();
+        int tpe = alv.AlVct[i].getSubjectEnd();
+
+
+        //cout<<tgl<<"/"<<tpl<<endl;
+        //cout<<tgst<<"/"<<tpst<<endl;
+        //cout<<tge<<"/"<<tpe<<endl;
+        //cout<<mtl<<"/"<<std::min(tgst,tpst) + (tge-tgst) +
+        //cout<<(tge-tgst+1)<<"/"<<(tpe -tpst+1)<<"/"<<qstr.length()<<endl;
+        int pred = (tge-tgst+1)+ std::min(tgst-1,tpst-1) + std::min((tgl -tge),(tpl-tpe));
+        if(mtl!= pred)
+        {
+            cout<<qstr<<endl<<sstr<<endl;
+            cout<<pred<<"/"<<mtl<<endl;
+        }
+    }*/
     
-    char* filename = "";
-    vector<string> fileIDs;
 
-    AlignVector Algns;
-
-    fileIDs = Algns.readAligns(filename);
+    /*
+    //test info_3D operator overload
+    cout<<"###################################"<<endl;
+    cout<<alv.info_3D[0](0,0);
     
-
+    cout<<"###################################"<<endl;
+    int alignEnd = alv.AlVct[0].getSubjectEnd();
+    cout<<alv.info_3D[0](alignEnd,alignEnd);
+    */
 
 
     return 1;
@@ -39,7 +123,7 @@ int main()
 
 
 /*
-multi
+polymorphism test 
 class base
 {
     public:

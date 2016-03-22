@@ -1,4 +1,4 @@
-#include "myUtility.h"
+#include "myUtility.hpp"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -37,18 +37,19 @@ void test()
 }
 
 //Read json file into Alignment vector 
-bool ReadAligns(const char* filename, vector<Alignment>& AlVct)
+std::vector<std::string> ReadAligns(const char* filename, vector<Alignment>& AlVct)
 {   
     Json::Value root;  
     Json::Reader reader;
     vector<string> members;
     ifstream infile(filename);
+    std::vector<std::string> fileIDs;
     //open the file
     if(!infile.is_open())
     {
         cerr<<"Can not open file: "<<filename<<endl;
         cerr<<strerror(errno)<<endl;
-        return false;
+        return fileIDs;
     }
     //parse the file
     bool parsingSuccessful = reader.parse( infile, root );
@@ -57,11 +58,13 @@ bool ReadAligns(const char* filename, vector<Alignment>& AlVct)
     {
         std::cout << "Failed to parse configuration\n"<< reader.getFormattedErrorMessages();
         infile.close();
-        return 0;
+        return fileIDs;
                                    
     }   
+    
 
-    Json::Value aligns = root["Aligns"];
+    members = root.getMemberNames();
+    Json::Value aligns =root[members[0]];
     
     AlVct.resize(aligns.size());
     for(int idx = 0; idx < aligns.size(); idx++ )
@@ -102,8 +105,8 @@ bool ReadAligns(const char* filename, vector<Alignment>& AlVct)
 		}
 		//AlVct[idx].setScore(atof(tmp.get("score", "").asString().c_str()));
 		//AlVct[idx].setExpectedValue(atof(tmp.get("expect", "").asString().c_str()));
-		std::string identitiesString = tmp.get("identities", "").asString();
-		identitiesString = identitiesString.substr(0, identitiesString.size() - 1);
+		//std::string identitiesString = tmp.get("identities", "").asString();
+		//identitiesString = identitiesString.substr(0, identitiesString.size() - 1);
 		//AlVct[idx].setIdentities(atof(identitiesString.c_str()));
 		AlVct[idx].setQueryStart(atoi(tmp.get("queryStart", "").asString().c_str()));
 		AlVct[idx].setQueryPart(tmp.get("queryPart", "").asString());
@@ -118,9 +121,10 @@ bool ReadAligns(const char* filename, vector<Alignment>& AlVct)
         AlVct[idx].selectionFlag = CANDIDATE;
 		//
         AlVct[idx].alignSource = tmp.get("alignSource", "").asString();
+        fileIDs.push_back(tmp["fileID"].asString());
     }
     infile.close();
-    return true;
+    return fileIDs;
 }
 
 
@@ -159,4 +163,12 @@ bool ReadCoord(const char* filename, Point*& p)
 
 
 
-
+int countGap(std::string str)
+{
+    int strLen = str.length();
+    int sum = 0;
+    for(int i=0; i<strLen; i++)
+        if( str[i] == '-')
+            sum +=1;
+    return sum;
+}

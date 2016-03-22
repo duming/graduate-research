@@ -10,7 +10,7 @@
 
 
 #include "AlignmentSelection/AlignmentSelectionBase.h"
-#include "myUtility.h"
+#include "myUtility.hpp"
 using namespace std;
 
 

@@ -85,7 +85,7 @@ std::vector<std::string> ReadAligns(const char* filename, vector<Alignment>& AlV
 
 
         //initialization of template
-
+        AlVct[idx].setTemplateName(tmp.get("templateName","").asString());
 		AlVct[idx].setTemplateRealSequenceInfo(tmp.get("templateSequenceInfo", "").asString());
         AlVct[idx].setTemplateSequenceLength(atoi(tmp.get("templateSequenceLength","").asString().c_str()));
 

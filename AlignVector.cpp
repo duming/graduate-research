@@ -200,11 +200,10 @@ void my3Dinfo::makeSegment(Alignment& al)
         tst = 0;
     }
     //get extended preffix
-    sg.crds.resize(segLen,3);
-    sg.crds = allCrds.block(indx_3d,0,segLen,3);
-    sg.qst = qst; sg.qed = qst + segLen -1;
-    sg.tst = tst; sg.ted = tst + segLen -1;
-    sgmts.push_back(sg);
+    prefix.crds.resize(segLen,3);
+    prefix.crds = allCrds.block(indx_3d,0,segLen,3);
+    prefix.qst = qst; sg.qed = qst + segLen -1;
+    prefix.tst = tst; sg.ted = tst + segLen -1;
 
     //get actual coordinates
     qst += segLen;
@@ -256,16 +255,12 @@ void my3Dinfo::makeSegment(Alignment& al)
 
     //get extended suffix
     segLen = std::min((tl - ted),(ql -qed));
-    if(segLen != 0)
-    {//we do have a tail    
-        sg.qst = qed;
-        sg.qed = qed + segLen -1;
-        sg.tst = tst;
-        sg.ted = tst + segLen -1;
-        sg.crds.resize(segLen,3);
-        sg.crds = allCrds.block(indx_3d,0,segLen,3);
-        sgmts.push_back(sg);
-    }
+    suffix.qst = qed;
+    suffix.qed = qed + segLen -1;
+    suffix.tst = tst;
+    suffix.ted = tst + segLen -1;
+    suffix.crds.resize(segLen,3);
+    suffix.crds = allCrds.block(indx_3d,0,segLen,3);
 }   
 
 
@@ -290,5 +285,14 @@ int gapLength(std::string seq, int start)
     while(len+start < seq.length() && seq[start+len] =='-')
         len++;
     return len;
+}
+
+void Eigen2Array(Eigen::MatrixXd &mat, double** array)
+{
+    int rl = mat.rows();
+    int cl = mat.cols();
+    for(int i= 0; i< rl;i++)
+        for(int j=0; j<cl;j++)
+            array[i][j] = mat(i,j);
 }
 

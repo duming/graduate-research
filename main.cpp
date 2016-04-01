@@ -4,7 +4,8 @@
 #include "stdlib.h"
 #include "DataObject/Alignment.h"
 #include "AlignVector.hpp"
-
+#include "TMalign.h"
+#include "basic_fun.hpp"
 
 #include <vector>
 #include <string>
@@ -16,12 +17,30 @@ using namespace std;
 int main()
 {
 
-    string dataPath ="/Users/ming/projects/MUfold/Data/newData/";
+    string dataPath ="/Users/ming/projects/MUfold/Data/fakeTestData/";
     //GenerateExperimentDatasetOutput/casp11_04302014_fully/"; 
     string fileName = "T0759_blast.json";
     AlignVector alv;
+    
+    alv.readAll(dataPath,fileName);
+    
+    
+    double **st1;
+    double **st2;
+    double t[3],u[3][3],Rcomm;
+    int sglen = alv.info_3D[0].sgmts[1].len();
+    NewArray(&st1,sglen,3);
+    NewArray(&st2,sglen,3);
+    
 
-    alv.readAll(dataPath, fileName);
+    double score; 
+    TMscore tms(sglen,sglen);
+    Eigen2Array(alv.info_3D[0].sgmts[1].crds, st1);
+    Eigen2Array(alv.info_3D[0].sgmts[1].crds, st2);
+    score = tms.TMscore8_search(st1,st2,sglen,t,u,1,8,&Rcomm);
+    cout<<score<<endl;
+
+    /*
     //alv.info_3D[0].makeSegment(alv.AlVct[0]);
     //test make segment
     for(int i=0;i<alv.vctlen;i++)
@@ -31,11 +50,11 @@ int main()
         //cout<<alv.AlVct[i].getSubjectPart()<<endl;
         //cout<<alv.info_3D[i].allCrds<<endl;
         int totalLen = alv.info_3D[i].allCrds.rows();
+        //cout<< alv.info_3D[i].sgmts.back().crds.rows()<<endl;
         int sum = 0;
         for(int j=0;j<alv.info_3D[i].sgmts.size();j++)
         {   
             my3Dinfo::segment& sg = alv.info_3D[i].sgmts[j];
-
             //check total length of all segments
             sum += sg.crds.rows();
 
@@ -47,7 +66,7 @@ int main()
 
             //cout<<sg.qst<<"/"<<sg.qed<<"/"<<sg.tst<<"/"<<sg.ted<<endl;
             //cout<<&sg.crds<<endl;
-            //cout<<sg.crds.rows()<<endl;
+            cout<<sg.crds.rows()<<endl;
             //cout<<sg.crds<<endl;
             //cout<<endl;
         }
@@ -58,8 +77,7 @@ int main()
         cout<<"++++++++++++++++"<<i<<"++++++++++++++++++"<<endl;
     }
     cout<<alv.vctlen<<endl;
-
-
+    */
     /*
     //test gapLength()
     string testStr = "IVDPVSNLRLPVEEAYKRGLVGIEFKEKLLSAE------------RAVTGYNDPETGNIISLFQAMNKELIEKGH";

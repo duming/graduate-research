@@ -30,6 +30,12 @@ int blockLength(std::string seq, int start);
 int gapLength(std::string seq, int start);
 
 
+
+//Input: Eigen matrix
+//Output: copy matrix to arry
+//
+//
+void Eigen2Array(Eigen::MatrixXd &mat, double** arry);
 //////////////////////////
 ////////////////////////////////////////////
 
@@ -53,6 +59,8 @@ class my3Dinfo
          */
         void makeSegment(Alignment& al);
 
+
+        //double **
 
 
         Eigen::MatrixXd operator ()(int startRow, int endRow)
@@ -87,6 +95,13 @@ class my3Dinfo
     public:
         //store the 3D infomations in the form of segment
         std::vector<segment> sgmts;
+        
+        //there may not have a prefix or suffix, and then the rows() of the segment will be zero
+        //the fully extended part at the begining
+        segment prefix;
+        //the fully extended part at the end
+        segment suffix;
+        
         //store the 3D informations in the form of one n-by-3 matrix
         Eigen::MatrixXd allCrds;
 };

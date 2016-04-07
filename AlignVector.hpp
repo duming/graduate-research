@@ -1,3 +1,6 @@
+#ifndef ALIGNVECTOR
+#define ALIGNVECTOR
+
 #include "DataObject/DataObjects.h"
 
 #include <stdio.h>
@@ -60,9 +63,12 @@ class my3Dinfo
         void makeSegment(Alignment& al);
 
 
-        //double **
+        int segNum()
+        {   return sgmts.size();    }
 
 
+
+       
         Eigen::MatrixXd operator ()(int startRow, int endRow)
         {
         }
@@ -73,6 +79,14 @@ class my3Dinfo
             public:
             //3d coordinates of the segment
             Eigen::MatrixXd crds;
+            
+            //This function takes query index start end and return the corresponds part in
+            //template 3D structure
+            //Input: 1.start 2.end
+            //Output: copy data from allCrds to array 
+            //Notice that this function do NOT allocate memory for array
+            void block2array(int start, int end, double** array);
+
 
             /////following variables start from zero
             
@@ -133,10 +147,38 @@ class AlignVector
          */
         std::vector<std::string> readAligns(const char* fileName);
         
+        class Align3D
+        {
+            public:
+                Align3D(Alignment &algn, my3Dinfo &info)
+                    : alignment(algn)
+                    , info3D(info)
+                { }
+                Align3D(const Align3D& otherAlign)
+                    : alignment(otherAlign.alignment)
+                    , info3D(otherAlign.info3D)
+                { }
+            public:
+                Alignment & alignment;
+                my3Dinfo & info3D;
+        };
 
+
+        Align3D operator [](int i)
+        {
+            Align3D ret(AlVct[i], info_3D[i]);
+            return ret;
+        }
+
+        int len()
+        {   return AlVct.size();    }  
 
     public:
         std::vector<Alignment> AlVct;
         int vctlen;
         std::vector<my3Dinfo> info_3D;         
 };
+
+#endif 
+
+

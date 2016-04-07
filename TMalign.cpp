@@ -28,6 +28,8 @@ char version[20];                          //version
 
 void TMscore::parameter_set4search(int xlen, int ylen)
 {
+    this->xlen = xlen;
+    this->ylen = ylen;
 	//parameter initilization for searching: D0_MIN, Lnorm, d0, d0_search, score_d8
 	D0_MIN=0.5; 
 	dcu0=4.25;                       //update 3.85-->4.25
@@ -90,20 +92,18 @@ void TMscore::parameter_set4scale(int len, double d_s)
 
 
 
-TMscore:: TMscore(int xlen, int ylen)
+TMscore:: TMscore()
 {
-    this->xlen = xlen;
-    this->ylen = ylen;
 
-	parameter_set4search(xlen, ylen);          //please set parameters in the function
-    int simplify_step     = 40;               //for similified search engine
-    int score_sum_method  = 8;                //for scoring method, whether only sum over pairs with dis<score_d8
+	//parameter_set4search(MAXVCTLEN, MAXVCTLEN);          //please set parameters in the function
+    //int simplify_step     = 40;               //for similified search engine
+    //int score_sum_method  = 8;                //for scoring method, whether only sum over pairs with dis<score_d8
         
 	int i;
-    int *invmap0          = new int[ylen+1]; 
-    int *invmap           = new int[ylen+1]; 
+    int *invmap0          = new int[MAXVCTLEN+1]; 
+    int *invmap           = new int[MAXVCTLEN+1]; 
     double TM, TMmax=-1;
-	for(i=0; i<ylen; i++)
+	for(i=0; i<MAXVCTLEN; i++)
 	{
 		invmap0[i]=-1;
 	}	
@@ -112,18 +112,18 @@ TMscore:: TMscore(int xlen, int ylen)
     //  allocate memory
     ////////////////////////////////////
     //------get length first------>
-	minlen=getmin(xlen, ylen);
+	//MAXVCTLEN=getmin(MAXVCTLEN, MAXVCTLEN);
 
     //------allocate memory for x and y------>
-	NewArray(&xa, xlen, 3);
-    seqx   = new char[xlen+1];
-	secx   = new int[xlen];
-	xresno = new int[xlen];
+	NewArray(&xa, MAXVCTLEN, 3);
+    seqx   = new char[MAXVCTLEN+1];
+	secx   = new int[MAXVCTLEN];
+	xresno = new int[MAXVCTLEN];
 
-	NewArray(&ya, ylen, 3);
-	seqy    = new char[ylen+1];
-	yresno  = new int[ylen];
-	secy    = new int[ylen];
+	NewArray(&ya, MAXVCTLEN, 3);
+	seqy    = new char[MAXVCTLEN+1];
+	yresno  = new int[MAXVCTLEN];
+	secy    = new int[MAXVCTLEN];
 
     
     
@@ -131,15 +131,15 @@ TMscore:: TMscore(int xlen, int ylen)
     
     
     //------allocate memory for other temporary varialbes------>
- 	NewArray(&r1, minlen, 3);
-	NewArray(&r2, minlen, 3);
-	NewArray(&xtm, minlen, 3);
-	NewArray(&ytm, minlen, 3);
-	NewArray(&xt, xlen, 3);
+ 	NewArray(&r1, MAXVCTLEN, 3);
+	NewArray(&r2, MAXVCTLEN, 3);
+	NewArray(&xtm, MAXVCTLEN, 3);
+	NewArray(&ytm, MAXVCTLEN, 3);
+	NewArray(&xt, MAXVCTLEN, 3);
 
-	NewArray(&score, xlen+1, ylen+1);
-	NewArray(&path, xlen+1, ylen+1);
-	NewArray(&val, xlen+1, ylen+1); 
+	NewArray(&score, MAXVCTLEN+1, MAXVCTLEN+1);
+	NewArray(&path, MAXVCTLEN+1, MAXVCTLEN+1);
+	NewArray(&val, MAXVCTLEN+1, MAXVCTLEN+1); 
 }
 
 TMscore::~TMscore()
@@ -147,16 +147,16 @@ TMscore::~TMscore()
     ///////////////
     //  free memory
     ////////////////
-	DeleteArray(&path, xlen+1);
-	DeleteArray(&val, xlen+1);
-	DeleteArray(&score, xlen+1);
-    DeleteArray(&xa, xlen);
-	DeleteArray(&xt, xlen);
-	DeleteArray(&ya, ylen);
-	DeleteArray(&r1, minlen);
-	DeleteArray(&r2, minlen);
-	DeleteArray(&xtm, minlen);
-	DeleteArray(&ytm, minlen);
+	DeleteArray(&path, MAXVCTLEN+1);
+	DeleteArray(&val, MAXVCTLEN+1);
+	DeleteArray(&score, MAXVCTLEN+1);
+    DeleteArray(&xa, MAXVCTLEN);
+	DeleteArray(&xt, MAXVCTLEN);
+	DeleteArray(&ya, MAXVCTLEN);
+	DeleteArray(&r1, MAXVCTLEN);
+	DeleteArray(&r2, MAXVCTLEN);
+	DeleteArray(&xtm, MAXVCTLEN);
+	DeleteArray(&ytm, MAXVCTLEN);
     
     
     delete [] seqx;
@@ -239,15 +239,15 @@ int TMscore::score_fun8( double **xa,
 //                                  
 //          
 // output:  the best rotaion matrix t0, u0 that results in highest TMscore
-double TMscore::TMscore8_search( double **xtm, 
-                        double **ytm,
-                        int Lali, 
-                        double t0[3],
-                        double u0[3][3],
-                        int simplify_step,
-                        int score_sum_method,
-                        double *Rcomm
-                       )
+//double TMscore::TMscore8_search( double **xtm, 
+//                        double **ytm,
+//                        double t0[3],
+//                        double u0[3][3],
+//                        int simplify_step,
+//                        int score_sum_method,
+//                        double *Rcomm
+//                       )
+double TMscore::TMscore8_search() 
 {   
     int i, m;
     double score_max, score, rmsd;    
@@ -315,7 +315,7 @@ double TMscore::TMscore8_search( double **xtm,
             Kabsch(r1, r2, L_frag, 1, &rmsd, t, u);
             if(i_init==0)
             {
-                *Rcomm=sqrt(rmsd/Lali);
+                Rcomm=sqrt(rmsd/Lali);
             }
             do_rotation(xtm, xt, Lali, t, u);
             

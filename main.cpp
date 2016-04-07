@@ -6,10 +6,13 @@
 #include "AlignVector.hpp"
 #include "TMalign.h"
 #include "basic_fun.hpp"
+#include "IntervalTree.h"
+#include "StructAnalysis.hpp"
 
 #include <vector>
 #include <string>
 #include <iostream>
+#include <time.h>
 using namespace std;
 
 
@@ -17,29 +20,42 @@ using namespace std;
 int main()
 {
 
-    string dataPath ="/Users/ming/projects/MUfold/Data/fakeTestData/";
-    //GenerateExperimentDatasetOutput/casp11_04302014_fully/"; 
+    string dataPath ="/Users/ming/projects/MUfold/Data/newData/";
+     //   GenerateExperimentDatasetOutput/casp11_04302014_fully/"; 
     string fileName = "T0759_blast.json";
     AlignVector alv;
     
     alv.readAll(dataPath,fileName);
     
+  
+    //test Interval Tree 
+   // StructAnalysis sa(alv);
+    //sa.analyze();
     
+    
+    //test Tmscore    
     double **st1;
     double **st2;
     double t[3],u[3][3],Rcomm;
     int sglen = alv.info_3D[0].sgmts[1].len();
-    NewArray(&st1,sglen,3);
-    NewArray(&st2,sglen,3);
+    int sglen1 = alv.info_3D[0].sgmts[2].len();
+    //NewArray(&st1,sglen,3);
+    //NewArray(&st2,sglen,3);
     
+    clock_t start,end;
 
+    start = clock();
     double score; 
-    TMscore tms(sglen,sglen);
-    Eigen2Array(alv.info_3D[0].sgmts[1].crds, st1);
-    Eigen2Array(alv.info_3D[0].sgmts[1].crds, st2);
-    score = tms.TMscore8_search(st1,st2,sglen,t,u,1,8,&Rcomm);
+    TMscore tms;
+    tms.setLength(sglen);
+    Eigen2Array(alv.info_3D[0].sgmts[1].crds, tms.xa);
+    Eigen2Array(alv.info_3D[0].sgmts[1].crds, tms.ya);
+    score = tms.TMscore8_search();
+    end =clock();
     cout<<score<<endl;
-
+    cout<<((float)(end - start))/CLOCKS_PER_SEC<<endl;
+    
+    
     /*
     //alv.info_3D[0].makeSegment(alv.AlVct[0]);
     //test make segment

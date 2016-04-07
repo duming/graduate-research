@@ -1,5 +1,8 @@
 #include "AlignVector.hpp"
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+//                          AlignVector part
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 bool AlignVector::readAll(std::string dataPath, std::string fileName)
 {
@@ -263,6 +266,18 @@ void my3Dinfo::makeSegment(Alignment& al)
     suffix.crds = allCrds.block(indx_3d,0,segLen,3);
 }   
 
+
+void my3Dinfo::segment:: block2array(int start, int end, double**array)
+{
+    int crdStart = start - qst;
+    int crdEnd = end - qst;
+    int colLen = crds.cols();
+
+    int i=0;
+    for(int rowIndex = crdStart; rowIndex <= crdEnd; rowIndex++,i++)
+        for(int colIndex = 0; colIndex < colLen; colIndex++)
+            array[i][colIndex] = crds(rowIndex,colIndex);
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

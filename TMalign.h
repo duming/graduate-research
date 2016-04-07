@@ -17,14 +17,31 @@
  *  Modified by Ming Du to encapsulate the data structure and method
  *  Mar. 29 2016
  *///////////////////////////////////////////////////////////////////
-
+#ifndef TMALIGN
+#define TMALIGN
 #define MAXLEN 10000                        //maximum length of filenames
 #define MAXVCTLEN 2000 //max length of structure
 class TMscore
 {
     public:
-        TMscore(int xlen, int ylen);
+        TMscore();
         ~TMscore();
+
+        void setLength(int length)
+        {
+            Lali = length;
+            xlen = ylen = length;
+            parameter_set4search(length,length);
+
+        }
+
+        void setStep(int step,int method)
+        {
+            simplify_step = step;
+            score_sum_method = method;
+
+        }
+
         void parameter_set4search(int xlen, int ylen);
         void parameter_set4final(double len);
         void parameter_set4scale(int len, double d_s);
@@ -40,18 +57,11 @@ class TMscore
               );
         
         
-        double TMscore8_search( double **xtm, 
-                        double **ytm,
-                        int Lali, 
-                        double t0[3],
-                        double u0[3][3],
-                        int simplify_step,
-                        int score_sum_method,
-                        double *Rcomm
-                       );
+        double TMscore8_search();
 
 
 
+        double **xa, **ya;                         //for input vectors xa[0...xlen-1][0..2], ya[0...ylen-1][0..2]
 
     private:
         double D0_MIN;                             //for d0
@@ -61,7 +71,6 @@ class TMscore
         bool   **path;                             //for dynamic programming  
         double **val;                              //for dynamic programming  
         int    xlen, ylen, minlen;                 //length of proteins
-        double **xa, **ya;                         //for input vectors xa[0...xlen-1][0..2], ya[0...ylen-1][0..2]
                                            //in general, ya is regarded as native structure --> superpose xa onto ya
         int    *xresno, *yresno;                   //residue numbers, used in fragment gapless threading 
         double **xtm, **ytm;                       //for TMscore search engine
@@ -77,8 +86,14 @@ class TMscore
         bool o_opt, a_opt, u_opt, d_opt, v_opt;
         double TM3, TM4, TM5;
 
+        int Lali;
+        double t0[3];
+        double u0[3][3];
+        int simplify_step;
+        int score_sum_method;
+        double Rcomm;
 };
-
+#endif
 /*
 void TMscore::allocate_memory()
 {    

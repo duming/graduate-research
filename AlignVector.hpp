@@ -39,6 +39,11 @@ int gapLength(std::string seq, int start);
 //
 //
 void Eigen2Array(Eigen::MatrixXd &mat, double** arry);
+
+
+
+
+bool isMatClean(Eigen::MatrixXd &mat);
 //////////////////////////
 ////////////////////////////////////////////
 

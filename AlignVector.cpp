@@ -205,8 +205,8 @@ void my3Dinfo::makeSegment(Alignment& al)
     //get extended preffix
     prefix.crds.resize(segLen,3);
     prefix.crds = allCrds.block(indx_3d,0,segLen,3);
-    prefix.qst = qst; sg.qed = qst + segLen -1;
-    prefix.tst = tst; sg.ted = tst + segLen -1;
+    prefix.qst = qst; prefix.qed = qst + segLen -1;
+    prefix.tst = tst; prefix.ted = tst + segLen -1;
 
     //get actual coordinates
     qst += segLen;
@@ -311,3 +311,15 @@ void Eigen2Array(Eigen::MatrixXd &mat, double** array)
             array[i][j] = mat(i,j);
 }
 
+
+//detect 10000 and 11000 in the matrix
+//if there is then return false
+bool isMatClean(Eigen::MatrixXd &mat)
+{   
+    for(int i = 0 ; i < mat.rows() ; i++)
+        for(int j = 0 ; j < mat.cols() ; j++)
+            if(mat(i,j) >=9000)
+                return false;
+
+    return true;
+}

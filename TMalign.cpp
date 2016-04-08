@@ -92,7 +92,7 @@ void TMscore::parameter_set4scale(int len, double d_s)
 
 
 
-TMscore:: TMscore()
+TMscore:: TMscore():xtm(xa),ytm(ya)
 {
 
 	//parameter_set4search(MAXVCTLEN, MAXVCTLEN);          //please set parameters in the function
@@ -133,8 +133,8 @@ TMscore:: TMscore()
     //------allocate memory for other temporary varialbes------>
  	NewArray(&r1, MAXVCTLEN, 3);
 	NewArray(&r2, MAXVCTLEN, 3);
-	NewArray(&xtm, MAXVCTLEN, 3);
-	NewArray(&ytm, MAXVCTLEN, 3);
+	//NewArray(&xtm, MAXVCTLEN, 3);
+	//NewArray(&ytm, MAXVCTLEN, 3);
 	NewArray(&xt, MAXVCTLEN, 3);
 
 	NewArray(&score, MAXVCTLEN+1, MAXVCTLEN+1);
@@ -155,8 +155,8 @@ TMscore::~TMscore()
 	DeleteArray(&ya, MAXVCTLEN);
 	DeleteArray(&r1, MAXVCTLEN);
 	DeleteArray(&r2, MAXVCTLEN);
-	DeleteArray(&xtm, MAXVCTLEN);
-	DeleteArray(&ytm, MAXVCTLEN);
+	//DeleteArray(&xtm, MAXVCTLEN);
+	//DeleteArray(&ytm, MAXVCTLEN);
     
     
     delete [] seqx;

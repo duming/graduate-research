@@ -73,7 +73,7 @@ class TMscore
         int    xlen, ylen, minlen;                 //length of proteins
                                            //in general, ya is regarded as native structure --> superpose xa onto ya
         int    *xresno, *yresno;                   //residue numbers, used in fragment gapless threading 
-        double **xtm, **ytm;                       //for TMscore search engine
+        double **&xtm, **&ytm;                       //for TMscore search engine
         double **xt;                               //for saving the superposed version of r_1 or xtm
         char   *seqx, *seqy;                       //for the protein sequence 
         int    *secx, *secy;                       //for the secondary structure 

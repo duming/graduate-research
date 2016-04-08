@@ -60,7 +60,9 @@ void StructAnalysis:: analyze(int option )
                 int endOverlap = overlapEnd(endSource, endResult);
                 int overlapLen = endOverlap - startOverlap +1;
 
+                //initialize te tmscore engine
                 tms.setLength(overlapLen);
+                tms.setStep(1,8);
                 //input source part
                 segs[j].block2array(
                                      startOverlap
@@ -74,7 +76,7 @@ void StructAnalysis:: analyze(int option )
                                     , tms.ya);
 
                 double dist = tms.TMscore8_search();
-                std::cout<<i<<k<<":"<<dist<<endl;
+                std::cout<<'['<<j<<","<<k<<":"<<dist<<']';
                 /////////////////////////////////
                 //end overlap calculation
                 /////////////////////////////////

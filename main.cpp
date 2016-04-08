@@ -29,10 +29,10 @@ int main()
     
   
     //test Interval Tree 
-   // StructAnalysis sa(alv);
-    //sa.analyze();
+    StructAnalysis sa(alv);
+    sa.analyze();
     
-    
+   /* 
     //test Tmscore    
     double **st1;
     double **st2;
@@ -47,16 +47,24 @@ int main()
     start = clock();
     double score; 
     TMscore tms;
-    tms.setLength(sglen);
-    Eigen2Array(alv.info_3D[0].sgmts[1].crds, tms.xa);
-    Eigen2Array(alv.info_3D[0].sgmts[1].crds, tms.ya);
+    tms.setStep(1,8);
+    my3Dinfo::segment &sg1 = alv.info_3D[0].sgmts[1];
+    my3Dinfo::segment &sg2 = alv.info_3D[4].sgmts[1];
+
+    cout<<sg1.crds<<endl;
+    cout<<"########################"<<endl;
+    cout<<sg2.crds<<endl;
+
+    Eigen2Array(sg1.crds, tms.xa);
+    Eigen2Array(sg2.crds, tms.ya);
+    tms.setLength(min(sg1.crds.rows(),sg2.crds.rows()));
     score = tms.TMscore8_search();
     end =clock();
     cout<<score<<endl;
     cout<<((float)(end - start))/CLOCKS_PER_SEC<<endl;
+    */
     
-    
-    /*
+    /* 
     //alv.info_3D[0].makeSegment(alv.AlVct[0]);
     //test make segment
     for(int i=0;i<alv.vctlen;i++)
@@ -79,13 +87,63 @@ int main()
             sgl2 = sg.qed -sg.qst+1;
             if(sgl1 != sg.crds.rows() || sgl2 != sgl1)
                 cout<<j<<":segment length error"<<sgl1<<"/"<<sgl2<<"/"<<sg.crds.rows()<<endl;
+            //cout<<sg.qst<<"/"<<sg.qed<<"/"<<sg.tst<<"/"<<sg.ted<<endl;
+            //cout<<&sg.crds<<endl;
+            cout<<sg.crds.rows();
+            if(isMatClean(sg.crds))
+                cout<<"clean";
+            else
+                cout<<"error";
+            //cout<<sg.crds<<endl;
+            cout<<endl;
+        }
+            ////////////////// check prefix ////////////////
+        {
+            my3Dinfo::segment& sg = alv.info_3D[i].prefix;
+            //check total length of all segments
+            sum += sg.crds.rows();
+
+            int sgl1, sgl2;
+            sgl1 = sg.ted - sg.tst+1;
+            sgl2 = sg.qed -sg.qst+1;
+            if(sgl1 != sg.crds.rows() || sgl2 != sgl1)
+                cout<<"prefix length error"<<sgl1<<"/"<<sgl2<<"/"<<sg.crds.rows()<<endl;
 
             //cout<<sg.qst<<"/"<<sg.qed<<"/"<<sg.tst<<"/"<<sg.ted<<endl;
             //cout<<&sg.crds<<endl;
-            cout<<sg.crds.rows()<<endl;
-            //cout<<sg.crds<<endl;
-            //cout<<endl;
+            cout<<sg.crds.rows();
+            if(isMatClean(sg.crds))
+                cout<<"clean";
+            else
+                cout<<"error";
+           //cout<<sg.crds<<endl;
+            cout<<endl;
         }
+        {
+            ////////////////// check suffix /////////////////
+            my3Dinfo::segment& sg = alv.info_3D[i].suffix;
+            //check total length of all segments
+            sum += sg.crds.rows();
+
+            int sgl1, sgl2;
+            sgl1 = sg.ted - sg.tst+1;
+            sgl2 = sg.qed -sg.qst+1;
+            if(sgl1 != sg.crds.rows() || sgl2 != sgl1)
+                cout<<":suffix length error"<<sgl1<<"/"<<sgl2<<"/"<<sg.crds.rows()<<endl;
+
+            //cout<<sg.qst<<"/"<<sg.qed<<"/"<<sg.tst<<"/"<<sg.ted<<endl;
+            //cout<<&sg.crds<<endl;
+            cout<<sg.crds.rows();
+            if(isMatClean(sg.crds))
+                cout<<"clean";
+            else
+                cout<<"error";
+
+            //cout<<sg.crds<<endl;
+            cout<<endl;
+        }
+
+
         int gapNum = countGap(alv.AlVct[i].getSubjectPart());
         if(!(sum + gapNum == totalLen))
             cout<<"total length not equal"<<sum<<"/"<<totalLen<<endl;

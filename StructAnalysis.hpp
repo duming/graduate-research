@@ -27,6 +27,7 @@ inline int overlapEnd(int end1, int end2)
 //segment in one alignment
 class CompareResult
 {
+    friend class StructAnalysis;
     //keep the search result of segment that overlaps the query segment
     struct Vote
     {
@@ -41,7 +42,7 @@ class CompareResult
         int overlapLen;
 
         //the distance between the overlaping part of the two segments
-        int dist;
+        double dist;
     };
     
     public:
@@ -53,7 +54,7 @@ class CompareResult
 
     struct CompareKey
     {//use the alignment index as primary key
-        bool operator () (IndexKey key1, struct IndexKey key2)
+        bool operator () (const IndexKey &key1, const IndexKey &key2) const
         {    if(key1.algnIndex == key2.algnIndex)
                 return key1.sgIndex < key2.sgIndex;
             else
@@ -90,7 +91,10 @@ class StructAnalysis
             }
             //allocate memory for array
             algnBase = new CompareResult[alignLen];
-            
+            for(int i = 0 ; i < alignLen ;i++)
+                algnBase[i].voteVct.resize(AlVct[i].info3D.segNum());
+
+
             //construct search tree
             makeTree();
         }
@@ -105,6 +109,9 @@ class StructAnalysis
         //                  !0: include extended part
         //Output: algnBase: similarity search results
         void analyze(int option = 0);
+
+        
+        void test();
 
     private:
         //Input Alignment vector

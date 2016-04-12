@@ -15,8 +15,6 @@
 #include <time.h>
 using namespace std;
 
-
-
 int main()
 {
 
@@ -27,29 +25,42 @@ int main()
     
     alv.readAll(dataPath,fileName);
     
-  
-    //test Interval Tree 
+ 
+    //test analyze
     StructAnalysis sa(alv);
+    sa.test();
     sa.analyze();
     
-   /* 
+   
+/*
+    //test interval tree
+    vector<Interval<string> > intervals;
+    string a, b, c;
+    intervals.push_back(Interval<string>(2, 10, a));
+    intervals.push_back(Interval<string>(3, 4, b));
+    intervals.push_back(Interval<string>(20, 100, c));
+    IntervalTree<string> tree;
+    tree = IntervalTree<string>(intervals);
+    vector<Interval<string> > results;
+    tree.findOverlapping(3,4 , results);
+    cout << "found " << results.size() << " overlapping intervals" << endl;
+*/
+
+
+    /*
     //test Tmscore    
-    double **st1;
-    double **st2;
-    double t[3],u[3][3],Rcomm;
-    int sglen = alv.info_3D[0].sgmts[1].len();
-    int sglen1 = alv.info_3D[0].sgmts[2].len();
-    //NewArray(&st1,sglen,3);
     //NewArray(&st2,sglen,3);
     
     clock_t start,end;
 
-    start = clock();
     double score; 
     TMscore tms;
+    TMscore tms2;
+
     tms.setStep(1,8);
+    tms2.setStep(1,8);
     my3Dinfo::segment &sg1 = alv.info_3D[0].sgmts[1];
-    my3Dinfo::segment &sg2 = alv.info_3D[4].sgmts[1];
+    my3Dinfo::segment &sg2 = alv.info_3D[5].sgmts[1];
 
     cout<<sg1.crds<<endl;
     cout<<"########################"<<endl;
@@ -59,9 +70,19 @@ int main()
     Eigen2Array(sg2.crds, tms.ya);
     tms.setLength(min(sg1.crds.rows(),sg2.crds.rows()));
     score = tms.TMscore8_search();
-    end =clock();
+    
+    
+    Eigen2Array(sg2.crds, tms2.xa);
+    Eigen2Array(sg1.crds, tms2.ya);
+    tms2.setLength(min(sg1.crds.rows(),sg2.crds.rows()));
+    int a=100,b;
+    auto score2( tms2.TMscore8_search());
+   int c = fakereturn(); 
+    cout<<score2<<endl;
     cout<<score<<endl;
-    cout<<((float)(end - start))/CLOCKS_PER_SEC<<endl;
+    cout<<a<<endl;
+    cout<<c<<endl;
+   // cout<<score2<<endl;
     */
     
     /* 
